@@ -1,0 +1,384 @@
+<!-- selzer Jan2019 daco -->
+<!-- ///////////////////////////////////////////// -->
+<div class=" cgDacoSpaHeader" >
+  <span class='m1'>
+      <span class='ltha'>
+      <span class='dacoLogo1'> Date Code Format .com  </span>
+      <span *ngIf='xiOn' class='floatRight' id='xlArea1'>
+          <label for="xlInputFileHtmlId" class="font1 myBtn2 ">Import from XL </label>             
+          <input type="file" (change)="onHtmlInputFileChange($event)"               
+               multiple="false" 
+               accept=".csv, .xls, .xlsx" 
+               class='hide-xlInput'
+               id='xlInputFileHtmlId'          
+          />  <!-- end input tag -->
+      </span> <!-- end xlArea1 -->
+      <!-- <button class="font1 myBtn2 "(click)='onClickSetLs()'>setLocal</button> -->
+      <!-- <button class="font1 myBtn2 "(click)='onClickGetLs()'>getLocal</button> -->
+    </span> <!-- end left top header area -->
+  </span>
+  <span class ='m2'>
+      <span class='font1'>
+        <span class='mainMsg msg '>        {{mainMsg}}       </span> 
+        <span class='mainMsg msg blinker'> {{importingMsg}}  </span> 
+      </span> 
+  </span> <!-- end m2 -->
+  <span class="m3 itemSearchBox ">
+      <span class='floatRight'>
+        <span class="font1"> Item: </span>
+        <input type='text' size=8 [(ngModel)]="itemToSearchFor">
+        <span type='button' 
+          class = ' font1 myBtn2  '  
+          (click)='onItemSearchClick()' >
+          Search
+        </span>
+      </span>
+  </span>
+  <span class=m4>
+      <span class='font1'>
+          <span class='helpMsg msg'> {{helpMsg}} </span>
+      </span>
+  </span>
+
+</div> <!-- end dacoSpaHeader -->
+<!-- ///////////////////////////////////////////// -->
+<div class="flexboxCcPgDf">
+  <div class="ccDiv" >
+    <div  class='ccPgDfHeadingBox'>
+      <span class='font2'> &nbsp;{{ccDivHead}}</span> 
+      <span *ngIf='dragHelpOn && ccOn' class='floatRight'>
+        <span class='msg'>  {{dragHelpMsg}} &nbsp; </span>
+        <span class='msg' id=dragHelpMsgRightArrow>&rarr; &nbsp; </span>
+      </span>
+    </div> 
+    
+    <div *ngIf='ccOn'>
+    <span *ngFor="let cc of contentChoiceArray1" >  
+      <span
+        mwlDraggable
+        class='ccBtn1'
+        type='button' 
+        (dragEnd)="dragEnd2(cc)" 
+      > {{cc.contentName}} 
+          <span class='ccCount'>{{cc.contentUsageCount}}</span>
+      </span>
+    </span>
+    </div> <!--  end *ngIf ccOn > -->
+
+    <!-- cg fd  start -->
+    <div *ngIf='dpOn'>
+      <div class='cgFd '>
+              <span class='v1'>Fmt</span>
+              <span class='v2'>Ln</span>
+              <span class='v3'>Sl</span>
+              <span class='v4'>Content</span>
+              <span class='v5'>Text or Mask</span>
+      </div>
+      <div class='cgFd' *ngFor="let fd of formatDetailArray2"  >
+                <span class='v1 font4'> {{fd.fdFormatKey}} </span>
+                <span class='v2 font4'> {{fd.fdRow}} </span>
+                <span class='v3 font4'> {{fd.fdRowSlot}} </span>
+                <span class='v4 font4 tt'> {{fd.fdContentName}}  
+                  <span class="ttTooltip">{{fd.fdContentName}}</span>
+                </span>
+                <span class='v5 font4 tt'> {{fd.fdMask}}
+                  <span class="ttTooltip">{{fd.fdMask}}</span>
+                </span>
+      </div>
+    </div> <!-- cgFd end -->
+      
+  </div> <!--  end cc div > -->
+  <div class="pgDiv">
+    <div class=ccPgDfHeadingBox>
+          <span class='font2'> &nbsp; {{pgDivHead}}</span>
+    </div>  <!-- end ccPgDfHeadingBox -->    
+    <div [hidden]="plHide" >    
+            <input type='text' class='hide1' #pgIdSaveHtml>
+            <input type='text' class='hide1' #pg0Or1SaveHtml>
+            <label for="litInputNm"> Literal:  </label>
+            <input type='text' name='litInputNm' #litInputHtml 
+            (focusout) = 'litInputFocusOut(litInputHtml)'>
+            <button type="button" class="plOkBtn font1 myBtn2"
+            (click)='okButLitInput(litInputHtml)'
+            >Ok </button>
+            <button type="button" id='plCan' class="plcancelBtn font1 myBtn2"
+            (click)='canButLitInput(litInputHtml)'
+            >Cancel</button>
+    </div>   <!-- end prompt literal -->
+    <div [hidden]="pmHide">
+      <input type='text' class='hide2' #pgIdSaveHtml>
+      <input type='text' class='hide2' #pg0Or1SaveHtml>
+      <span [hidden]="pmmHide">
+        <label for="maskInputNm"> Mask:  </label>
+        <input type='text' 
+          name='maskInputNm' #maskInputHtml 
+          class='maskInput'
+          (focus) = 'maskInputFocusIn()'
+        >
+      </span>
+      <button type="button" class="pmOkBtn font1 myBtn2"
+      (click)='okButMaskInput(maskInputHtml)'
+      >Ok </button>
+      <button type="button" id='pmCan' class="pmcancelBtn font1 myBtn2"
+      (click)='canButMaskInput(maskInputHtml)'
+      >Cancel</button>
+      <div  *ngIf="showMaskDropDownYn">
+        <div *ngFor="let fm of formatMaskArrayLotsOrDates" 
+          class="maskDropDownListItem"       
+          (click)="onClickMaskDropDown(fm)">{{ fm.fmMask }}
+        </div>
+      </div>
+    </div>   <!-- end prompt mask -->
+    <div *ngIf='pgOn'>
+    <p *ngIf='dragHelpOn'>
+        <span class= 'msg' id=dropHelpMsgDownArrow1>&nbsp; &darr; &nbsp; </span>
+        <span class= 'msg'>{{pg0HelpMsg}}</span>
+        <span class= 'msg' id=dropHelpMsgDownArrow2>&nbsp; &darr;</span>
+    </p>
+    <span 
+      mwlDroppable
+      (drop)="onDrop20()" 
+      (contextmenu)='onPg0ContainerRightClick()' 
+      type="button"
+      class=" pg0Container "
+      dragOverClass="drop-over-active"       
+      >
+        <!-- <span> </span> -->
+        <span *ngFor="let pg0 of productGridArray0; "
+          (click)='onPg0Click(pg0)'                                     
+          type="button" 
+          class='pg0Card'          
+          dragOverClass="drop-over-active"
+        >
+        {{pg0.pgContentShow}}
+        </span>
+  <!-- (contextmenu)= 'onPg0RightClick(pg0)' do cancel instead  --> 
+    </span>
+    <p *ngIf='dragHelpOn'>
+      <span class= 'msg' id=dropHelpMsgDownArrow1>&nbsp; &darr; &nbsp; </span>
+      <span class= 'msg'>{{pg1HelpMsg}}</span>
+      <span class= 'msg' id=dropHelpMsgDownArrow2>&nbsp; &darr;</span>
+    </p>
+    <!-- ----- -->
+    <!-- ----- -->
+    <!-- ----- -->
+
+      
+    <!-- ----- -->
+    <!-- ----- -->
+    <!-- ----- -->
+    <div class = 'cgPg1'>
+        <span class='xx'> </span>
+        <span class='x1 xv'>Slot1</span>
+        <span class='x2 xv'>Slot2</span>
+        <span class='x3 xv'>Slot3</span>
+        <span class='x4 xv'>Slot4</span>
+        <span class='y1 yv fh'>Line1</span>
+        <span class='y2 yv fh'>Line2</span>
+        <span class='y3 yv fh'>Line3</span>
+        <span class='y4 yv fh'>Line4</span>
+        <span *ngFor="let pg of productGridArray1; let i = index"
+        >
+          <span class='aa fh'>
+            <span 
+              class='pg1Card '
+              mwlDroppable 
+                (drop)="onDrop10(pg)"  
+                (click)='onPg1Click(pg)' 
+                (contextmenu)= 'onPg1RightClick(pg)'                            
+                type="button"        
+                dragOverClass="drop-over-active"
+            >
+              {{pg.pgContentShow}}
+                <!-- <span class='pg1CardInner'>
+                   {{pg.pgContentShow}}
+                </span> -->
+            </span>
+          </span>
+        </span>
+
+    </div>  <!-- end cgPg1 -->
+    </div> <!-- end of pgOn -->
+    <div *ngIf='dpOn' >         
+       <!-- dp detail preview start -->
+       <div class='cgDp'>
+         <span class='u1'>
+           <span class='dp1a'>{{dp1a}}</span>
+           <span class='dp1b'>{{dp1b}}</span>
+           <span class='dp1c'>{{dp1c}}</span>
+           <span class='dp1d'>{{dp1d}}</span>
+         </span>
+         <span class='u2'>
+            <span class='dp2a'>{{dp2a}}</span>
+            <span class='dp2b'>{{dp2b}}</span>
+            <span class='dp2c'>{{dp2c}}</span>
+            <span class='dp2d'>{{dp2d}}</span>
+          </span>
+         <span class='u3'>
+           <span class='dpSubHead'>Layout</span>
+          <!-- ngClass example, works ok, not used yet cuz array0 is combined. -->
+           <span class='dpDetail' 
+           *ngFor="let fc of formatComposeArray0"  
+           [ngClass]="{
+            'pg0Cardy':fc.fcContentOrText === 'c',
+            'noClassy':fc.fcContentOrText === 't'  }"
+            >
+             {{fc.fcPart1}} 
+           </span>
+         </span>
+         <span class='u4'>
+          <span class=' dpSubHead'>Preview</span>
+          <span class='dpDetail' *ngFor="let fc of formatComposeArray0"  >
+             {{fc.fcPart2}} 
+          </span>
+         </span>
+        </div> <!-- cgDP end -->
+        <!-- dp detail preview end -->
+    </div> <!--  end dpOn div > -->
+  </div> <!-- end of pgDiv -->
+  <div class="dfDiv" >
+    <div class=ccPgDfHeadingBox>
+        <span class=font2>&nbsp;Format Catalog</span> 
+        <span class='msg'> &nbsp; {{dfHelpMsg}} &nbsp; </span>
+    </div>   
+    <div class='dfScSfBox' (click)="accTog2('df')"  >
+      <span class="plusMinus"  *ngIf='!dfListOn'>+</span> 
+      <span class="plusMinus"  *ngIf='dfListOn'>-</span> 
+      <span class='font1 '> Format List  </span>         
+      <span class='dfScSfCount '> {{dfCount}}  </span>      
+    </div> <!-- end dfScbox for df -->
+    
+    <div *ngIf='dfListOn'  > <!-- start df list -->
+      <span class='cgDfList' >
+        <span class='n1 font3'>  Fmt </span>
+        <span class='n2 font3'> Description </span>
+        <span class='n3 font3'> Cnt </span>
+      </span>
+      <span tabindex="-1" *ngFor="let df of dateCodeFormatArray1; let dfi = index" 
+            class='cgDfList dfClickable dfHoverable'            
+            (click)='dfRefocus(dfi, "ok")'
+            (keydown.arrowup)='dfRefocus(dfi, "up")' 
+            (keydown.arrowdown)='dfRefocus(dfi,"dn")' 
+            >
+        <!-- <input class='n1' type="text" size='10' (focus)='kooboo()'> -->
+        <span class='n1 font4'> {{df.dfFormatKey}} </span>
+        <span class='n2 font4'> {{df.dfFormatName}} </span>
+        <span class='n3 font4'> {{df.dfUsageCount}} </span>
+      </span>
+    </div> <!-- end list df  -->
+
+     <div class='dfScSfBox' (click)="accTog2('sc')"  >
+        <span class="plusMinus"  *ngIf='!scListOn'>+</span> 
+        <span class="plusMinus"  *ngIf='scListOn'>-</span> 
+        <span class='font1 '> Items  </span>         
+        <span class='dfScSfCount '> {{suCount}}  </span>      
+     </div> <!-- end dfScbox for sc -->
+      
+     <!-- <div [hidden]="!scListOn" > ngIf vs hidden. hidden is slightly faster -->
+     <div *ngIf='scListOn' >  <!-- start sc list -->
+        <span class='cgScList'>
+          <span class='s1 font3'>  Item </span>
+          <span class='s2 font3'> Formats </span>
+        </span>
+        <span *ngFor="let su of suFreqArray0" 
+              class='cgScList'
+              >
+          <span class='s1 font4'> {{su.sku}} </span>
+          <span class='s2 font4'> {{su.skuUsageFormats}} </span>
+        </span>
+      </div> <!-- end list sc  -->
+
+      <div class='dfScSfBox' (click)="accTog2('sf')"  >
+          <span class="plusMinus"  *ngIf='!sfListOn'>+</span> 
+          <span class="plusMinus"  *ngIf='sfListOn'>-</span> 
+          <span class='font1 '> Items Layers Formats  </span>         
+          <span class='dfScSfCount '> {{sfCount}}  </span>      
+       </div> <!-- end dfScSfBox for sf -->
+  
+      <div *ngIf='sfListOn' >  <!-- start sf list -->
+        <span class='cgSfList'>
+          <span class='r1 font3'>  Item  </span>
+          <span class='r2 font3'> Layer </span>
+          <span class='r3 font3'> Format </span>
+        </span>
+        <span *ngFor="let sf of skuFormatArray1" 
+              class='cgSfList'
+              >
+          <span class='r1 font4'> {{sf.sfSku}}   </span>
+          <span class='r2 font4'> {{sf.sfLayer}} </span>
+          <span class='r3 font4'> {{sf.sfFormatKey}} </span>
+        </span>
+      </div> <!-- end sf list  -->
+
+<!-- fd start -->
+<div class='dfScSfBox' (click)="accTog2('fd')"  >
+    <span class="plusMinus"  *ngIf='!fdListOn'>+</span> 
+    <span class="plusMinus"  *ngIf='fdListOn'>-</span> 
+    <span class='font1 '> Format Detail </span>         
+    <span class='dfScSfCount '> {{fdCount}}  </span>      
+ </div> <!-- end dfScSfBox for fd -->
+
+<div *ngIf='fdListOn' >  <!-- start fd list -->
+  <span class='cgFdList'>
+    <span class='q1 font3'> Fmt </span>
+    <span class='q2 font3'> Ln </span>
+    <span class='q3 font3'> Sl </span>
+    <span class='q4 font3'> Content </span>
+    <span class='q5 font3'>Text or Mask </span>
+  </span>
+  <span *ngFor="let fd of formatDetailArray1" 
+        class='cgFdList'
+        >       
+    <span class='q1 font4'> {{fd.fdFormatKey}} </span>
+    <span class='q2 font4'>  {{fd.fdRow}} </span>
+    <span class='q3 font4'> {{fd.fdRowSlot}} </span>
+    <span class='q4 font4'> {{fd.fdContentName}}  </span>
+    <span class='q5 font4'> {{fd.fdMask}} </span>
+  </span>
+</div> <!-- end fd list  -->
+
+<!-- fl start -->
+<div class='dfScSfBox' (click)="accTog2('fl')"  >
+    <span class="plusMinus"  *ngIf='!flListOn'>+</span> 
+    <span class="plusMinus"  *ngIf='flListOn'>-</span> 
+    <span class='font1 '> Text </span>         
+    <span class='dfScSfCount '> {{flCount}}  </span>      
+ </div> <!-- end dfScSfBox for fl -->
+
+<div *ngIf='flListOn' >  <!-- start fl list -->
+  <span class='cgFlList'>
+    <span class='f1 font3'> Literal </span>
+  </span>
+  <span *ngFor="let fl of formatLiteralArray1" 
+        class='cgFlList'
+        >       
+    <span class='f1 font4'>  {{fl.flText}} </span>
+  </span>
+</div> <!-- end fl list  -->
+
+
+
+<!-- fm start -->
+<div class='dfScSfBox' (click)="accTog2('fm')"  >
+    <span class="plusMinus"  *ngIf='!fmListOn'>+</span> 
+    <span class="plusMinus"  *ngIf='fmListOn'>-</span> 
+    <span class='font1 '> Mask </span>         
+    <span class='dfScSfCount '> {{fmCount}}  </span>      
+ </div> <!-- end dfScSfBox for fm -->
+
+<div *ngIf='fmListOn' >  <!-- start fm list -->
+  <span class='cgFmList'>
+    <span class='j1 font3'> Mask </span>
+    <span class='j2 font3'> Type </span>
+  </span>
+  <span *ngFor="let fm of formatMaskArray1" 
+        class='cgFmList'
+        >       
+    <span class='j1 font4'> {{fm.fmMask}}      </span>
+    <span class='j2 font4'> {{fm.fmMaskType}}  </span>
+  </span>
+</div> <!-- end fm list  -->
+</div> <!-- end dfDiv -->  
+</div> <!-- end flexboxCcPgDf  -->
+<!-- ///////////////////////////////////////////// -->
+
