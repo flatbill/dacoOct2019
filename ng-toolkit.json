@@ -1,0 +1,13 @@
+{
+  "serverless": {
+    "provider": "aws",
+    "project": "daco2",
+    "skipInstall": false,
+    "directory": ".",
+    "clientProject": "daco2",
+    "serverless": {
+      "aws": {},
+      "gcloud": {}
+    }
+  }
+}
